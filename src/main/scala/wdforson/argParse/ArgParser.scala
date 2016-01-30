@@ -1,4 +1,4 @@
-package wdf.argParse
+package wdforson.argParse
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.{ Map => MutableMap }
@@ -87,6 +87,8 @@ class ParsedArgs(
   val argSpecsWithRawValues: Map[ArgSpec[_], List[String]]
 ) {
   def isPresent(argSpec: ArgSpec[_]): Boolean = argSpecsWithRawValues.get(argSpec).isDefined
+  def tryGet[T](argSpec: ArgSpec[T]): Option[T] =
+    if (isPresent(argSpec)) Some(get(argSpec)) else None
   def get[T](argSpec: ArgSpec[T]): T = argSpec.get(argSpecsWithRawValues.get(argSpec))
   def get(arg: String): Option[String] = getMulti(arg) match {
     case None => None
