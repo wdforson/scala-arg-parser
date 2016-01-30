@@ -1,4 +1,4 @@
-package wdf.argParse
+package wdforson.argParse
 
 object ArgParserTests {
   val argA = new StringArg(Set("--a", "-a"), required=true)
@@ -114,7 +114,7 @@ object ArgParserTests {
       testScenario5(parser)
       testScenario6(parser)
     }
-    println("(all tests passed)")
+    println("\n\n(ALL TESTS PASSED)\n\n")
   }
 }
 
