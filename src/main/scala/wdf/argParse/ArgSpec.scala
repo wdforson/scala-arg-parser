@@ -17,6 +17,23 @@ trait ArgSpec[T] {
       if (isMultiValued) "repeating" else "non-repeating")
 }
 
+object ArgSpec {
+  def stringArg(switches: String*) = StringArg(switches.toSet)
+  def requiredStringArg(switches: String*) = StringArg(switches.toSet, required=true)
+
+  def boolArg(switches: String*) = BoolArg(switches.toSet)
+  def requiredBoolArg(switches: String*) = BoolArg(switches.toSet, required=true)
+
+  def intArg(switches: String*) = IntArg(switches.toSet)
+  def requiredIntArg(switches: String*) = IntArg(switches.toSet, required=true)
+
+  def longArg(switches: String*) = LongArg(switches.toSet)
+  def requiredLongArg(switches: String*) = LongArg(switches.toSet, required=true)
+
+  def multiStringArg(switches: String*) = MultiStringArg(switches.toSet)
+  def requiredMultiStringArg(switches: String*) = MultiStringArg(switches.toSet, required=true)
+}
+
 abstract class BaseArgSpec[T](switches: Set[String])
 extends ArgSpec[T] {
   private val switchRegex = """^\-{1,2}[a-zA-Z_]+$""".r

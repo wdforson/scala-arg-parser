@@ -119,9 +119,9 @@ object ArgParserTests {
 }
 
 object BasicParserDemo {
-  val argA = new StringArg(Set("--a", "-a"))
-  val argB = new StringArg(Set("--bArg", "-b"))
-  val argMulti = new MultiStringArg(Set("--multiArg", "-m"))
+  val argA = ArgSpec.stringArg("--a", "-a")
+  val argB = ArgSpec.stringArg("--bArg", "-b")
+  val argMulti = ArgSpec.multiStringArg("--multiArg", "-m")
   def main(args: Array[String]) {
     val parser = ArgParser(argA, argB, argMulti)
     val results = parser.parseArgs(args)
