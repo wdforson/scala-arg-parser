@@ -1,4 +1,4 @@
-package wdforson.argParse
+package wdf.argParse
 
 object ArgParserTests {
   val argA = new StringArg(Set("--a", "-a"), required=true)

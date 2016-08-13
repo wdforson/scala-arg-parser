@@ -1,4 +1,4 @@
-package wdforson.argParse
+package wdf.argParse
 
 trait ArgSpec[T] {
   def switches: Set[String]

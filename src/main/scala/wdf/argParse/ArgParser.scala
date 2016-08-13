@@ -1,4 +1,4 @@
-package wdforson.argParse
+package wdf.argParse
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.{ Map => MutableMap }
@@ -19,9 +19,9 @@ class ArgParser(argSpecs: Iterable[ArgSpec[_]]) {
     case Nil =>
       validateArgs(argSpecsWithRawValues, switchMap.values.toSet)
       new ParsedArgs(positionalArgsRev.reverse, argSpecsWithRawValues)
-    case first :: rest =>
-      if (isSwitch(first)) {
-        parseSwitchAndMaybeValue(first) match {
+    case firstArg :: rest =>
+      if (isSwitch(firstArg)) {
+        parseSwitchAndMaybeValue(firstArg) match {
           case (argSpec, Some(value)) =>
             parseArgs(rest, positionalArgsRev, argSpecsWithRawValues + (argSpec -> List(value)))
           case (argSpec, None) =>
@@ -29,7 +29,7 @@ class ArgParser(argSpecs: Iterable[ArgSpec[_]]) {
             parseArgs(remaining, positionalArgsRev, argSpecsWithRawValues + (argSpec -> values))
         }
       } else {
-        parseArgs(rest, first :: positionalArgsRev, argSpecsWithRawValues)
+        parseArgs(rest, firstArg :: positionalArgsRev, argSpecsWithRawValues)
       }
   }
 
@@ -69,15 +69,18 @@ object ArgParser {
    *
    * return (remaining args, values collected)
    */
-  def collectArgSpecValues(args: List[String], isMultiValued: Boolean, acc: List[String] = Nil): (List[String], List[String]) = args match {
-    case Nil => (Nil, acc)
-    case first :: rest =>
-      if (!isSwitch(first) && (acc.isEmpty || isMultiValued)) {
-        val (remaining, values) = collectArgSpecValues(rest, isMultiValued, first :: acc)
-        (remaining, values.reverse)
-      } else {
-        (args, acc)
+  def collectArgSpecValues(args: List[String], isMultiValued: Boolean): (List[String], List[String]) = {
+    def helper(remainingArgs: List[String], accRev: List[String]=Nil): (List[String], List[String]) =
+      remainingArgs match {
+        case Nil => (Nil, accRev.reverse)
+        case firstArg :: rest =>
+          if (!isSwitch(firstArg) && (accRev.isEmpty || isMultiValued)) {
+            helper(rest, firstArg :: accRev)
+          } else {
+            (remainingArgs, accRev.reverse)
+          }
       }
+    helper(args)
   }
   def apply(argSpecs: ArgSpec[_]*) = new ArgParser(argSpecs.toSet)
 }
